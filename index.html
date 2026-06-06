@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Lottery Results</title>
+    <script src="https://kit.fontawesome.com/f12e9271ac.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>DAILY LOTTERY RESULTS</h1>
+            <p>Your Daily Luck Starts Here</p>
+        </div>
+
+        <nav>
+            <a href="#">Home</a>
+            <a href="#">Results</a>
+            <a href="#">About Us</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <div class="search-box">
+        <input type="text" placeholder="Search by date or result...">
+        <button>Calendar</button>
+    </div>
+
+    <div class="result-card">
+        <h2>TODAY'S RESULT</h2>
+        <p class="date">03 June 2026, Wednesday</p>
+
+        <div class="tag">DAILY LUCKY DRAW</div>
+
+        <div class="numbers">
+            <h1 id="number"></h1>
+            <!-- <div class="ball">5</div>
+            <div class="ball">4</div>
+            <div class="ball">8</div>
+            <div class="ball">9</div>
+            <div class="ball">2</div>
+            <div class="ball">1</div> -->
+        </div>
+
+        <div class="winner">Congratulations to All Winners!</div>
+    </div>
+
+    <div class="table-section">
+        <div class="table-header">PREVIOUS RESULTS</div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Lottery Name</th>
+                    <th>Winning Number</th>
+                </tr>
+            </thead>
+            <tr>
+                <th>Date</th>
+                <th>Lottery Name</th>
+                <th>Winning Number</th>
+            </tr>
+
+            <tr>
+                <td>02 Jun 2026</td>
+                <td>Everest super</td>
+                <td class="win">317845</td>
+            </tr>
+
+            <tr>
+                <td>01 Jun 2026</td>
+                <td>jackpot royals</td>
+                <td class="win">692154</td>
+            </tr>
+
+            <tr>
+                <td>31 May 2026</td>
+                <td>Golden</td>
+                <td class="win">428731</td>
+            </tr>
+
+            <tr>
+                <td>30 May 2026</td>
+                <td>Daimond</td>
+                <td class="win">851296</td>
+            </tr>
+
+            <tr>
+                <td>29 May 2026</td>
+                <td>King rekha</td>
+                <td class="win">163987</td>
+            </tr>
+
+            <tr>
+                <td>28 May 2026</td>
+                <td>Everest mini</td>
+                <td class="win">163987</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="features">
+        <div class="feature">
+            <h3>100% Secure</h3>
+            <p>Trusted & Verified Results</p>
+        </div>
+
+        <div class="feature">
+            <h3>Daily Updates</h3>
+            <p>Results Updated Every Day</p>
+        </div>
+
+        <div class="feature">
+            <h3>Fair & Transparent</h3>
+            <p>Fair Draw Process</p>
+        </div>
+
+        <div class="feature">
+            <h3>Support</h3>
+            <p>We're Here To Help</p>
+        </div>
+    </div>
+    <div class="admin-nav" onclick="adminNav()">
+         <h1 class="admin-nav" >Navigate to Admin Panel</h1>
+    </div>
+   
+
+    <footer>
+        <h2>DAILY LOTTERY RESULTS</h2>
+        <p>© 2026 Daily Lottery Results. All Rights Reserved.</p>
+
+        <div class="social">
+            <a href="#"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#"><i class="fa-brands fa-instagram"></i></a>
+            <a href="#"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#"><i class="fa-brands fa-youtube"></i></a>
+
+        </div>
+    </footer>
+    <script>
+
+        function adminNav(){
+            localStorage.setItem("islogIn", false);
+            window.location.href = "admin.html"
+        }
+
+        function getdata(){
+            const data = localStorage.getItem('data')
+            const number = document.getElementById("number");
+
+            try{
+                const _number = JSON.parse(data)
+                if(_number && _number.number){
+                    number.innerText = _number.number;
+                }else{
+                    number.innerText = "No Data"
+                }
+            }catch{
+                number.innerText = "No Data"
+            }
+
+            
+        }
+
+        window.onload = function(){
+            getdata();
+            console.log("Data Received")
+        }
+    </script>
+
+</body>
+
+</html>

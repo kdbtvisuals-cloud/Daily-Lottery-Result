@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login: Daily Lottery Results</title>
+    <link rel="stylesheet" href="CSS/login_style.css">
+</head>
+
+<body>
+
+    <header>
+        <div class="logo">
+            <h1>DAILY LOTTERY RESULTS</h1>
+            <p>Your Daily Luck Starts Here</p>
+        </div>
+
+    </header>
+
+
+    <div class="form-container">
+        <h4>Login to Verify Details:</h4>
+        <form class="register-form">
+            <input type="text" id="user_name" placeholder="Enter User Name">
+            <span id="errormsg_uname"></span>
+            <input type="password" id="password" placeholder="Enter password">
+            <span id="errormsg_password"></span>
+            <div onclick="login()" class="submit-btn">Submit</div>
+        </form>
+    </div>
+
+    <script>
+
+
+
+        function login() {
+            const user = {
+                "user_name": "Admin",
+                "password": "Pass@2025"
+            }
+
+            localStorage.setItem("user", JSON.stringify(user));
+            
+
+            const user_name = document.getElementById("user_name");
+            const password = document.getElementById("password")
+
+            const errormsg_uname = document.getElementById("errormsg_uname");
+            const errormsg_password = document.getElementById("errormsg_password");
+
+            let isvalid = true;
+            let isLogIn = false;
+
+            errormsg_uname.innerText = "";
+            errormsg_password.innerText = ""
+
+
+            if (user_name.value.length === 0) {
+                errormsg_uname.innerText = "Please Enter the Name";
+                isvalid = false;
+            }
+
+            if (password.value.length === 0) {
+                errormsg_password.innerText = "Please Enter the Password";
+                isvalid = false;
+            }
+
+
+            const _user = localStorage.getItem("user")
+            const user_data = JSON.parse(_user)
+            console.log(user_data)
+            if(user_data.user_name != user_name.value){
+                errormsg_uname.innerText = 'Username does not Exist';
+                isvalid=false
+            }
+            if(user_data.password != password.value){
+                errormsg_password.innerText = 'Password Wrong'
+                isvalid = false
+            }
+
+            if (isvalid) {
+                window.location.href = 'admin.html'
+                isLogIn = true;
+                localStorage.setItem("islogIn", isLogIn);
+                 console.log(isLogIn)
+                alert("Login Successfull")
+            }else{
+                // localStorage.setItem("isLogIn", isLogIn)
+            }
+
+           
+        }
+    </script>
+
+</body>
+
+</html>
