@@ -121,7 +121,7 @@
 
         /* Table */
         .table-section {
-            width: 90%;
+            /* width: 90%; */
             margin: 30px auto;
             background: white;
             border-radius: 15px;
