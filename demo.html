@@ -1,0 +1,470 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Lottery Results - Admin Panel</title>
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: #f4f6fa;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+
+        .sidebar {
+            width: 260px;
+            background: linear-gradient(180deg, #002a75, #001947);
+            color: white;
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo {
+            margin-bottom: 40px;
+        }
+
+        .logo h2 {
+            font-size: 24px;
+        }
+
+        .logo p {
+            font-size: 13px;
+            opacity: .8;
+        }
+
+        .menu {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .menu a {
+            text-decoration: none;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 10px;
+            transition: .3s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #0b4eff;
+        }
+
+        .menu i {
+            width: 25px;
+        }
+
+        .quick-actions {
+            margin-top: auto;
+        }
+
+        .quick-actions h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .action-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .refresh-btn {
+            background: white;
+            color: #003da6;
+        }
+
+        .public-btn {
+            background: #00c37a;
+            color: white;
+        }
+
+        /* Main */
+
+        .main {
+            flex: 1;
+            padding: 30px;
+        }
+
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .topbar h1 {
+            color: #003da6;
+        }
+
+        .top-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .top-btn {
+            border: none;
+            padding: 12px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+        }
+
+        .open-btn {
+            background: #003da6;
+        }
+
+        .logout-btn {
+            background: #ff4444;
+        }
+
+        /* Cards */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        }
+
+        .card h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+
+        .card p {
+            font-size: 35px;
+            font-weight: bold;
+            color: #003da6;
+        }
+
+        /* Form */
+
+        .form-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.08);
+            margin-bottom: 30px;
+        }
+
+        .form-card h2 {
+            color: #003da6;
+            margin-bottom: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+        }
+
+        .save-btn {
+            width: 100%;
+            margin-top: 20px;
+            padding: 15px;
+            border: none;
+            background: #0b4eff;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        /* Table */
+
+        .table-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,.08);
+        }
+
+        .table-card h2 {
+            color: #003da6;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background: #f5f5f5;
+            text-align: left;
+            padding: 15px;
+        }
+
+        td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .edit {
+            background: #0b4eff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .delete {
+            background: #ff4444;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        @media(max-width:900px) {
+
+            body {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .topbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+
+    <aside class="sidebar">
+
+        <div class="logo">
+            <h2>🏆 DAILY LOTTERY</h2>
+            <p>Your Daily Luck Starts Here</p>
+        </div>
+
+        <div class="menu">
+            <a href="#" class="active">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </a>
+
+            <a href="#">
+                <i class="fas fa-plus-circle"></i>
+                Add Result
+            </a>
+
+            <a href="#">
+                <i class="fas fa-list"></i>
+                All Results
+            </a>
+
+            <a href="#">
+                <i class="fas fa-gear"></i>
+                Settings
+            </a>
+        </div>
+
+        <div class="quick-actions">
+            <h3>Quick Actions</h3>
+
+            <button class="action-btn refresh-btn">
+                Refresh Data
+            </button>
+
+            <button class="action-btn public-btn">
+                Open Public Page
+            </button>
+        </div>
+
+    </aside>
+
+    <!-- Main Content -->
+
+    <main class="main">
+
+        <div class="topbar">
+
+            <h1>Admin Dashboard</h1>
+
+            <div class="top-actions">
+
+                <button class="top-btn open-btn">
+                    Open Public Page
+                </button>
+
+                <button class="top-btn logout-btn">
+                    Logout
+                </button>
+
+            </div>
+
+        </div>
+
+        <!-- Stats -->
+
+        <div class="stats">
+
+            <div class="card">
+                <h3>Total Results</h3>
+                <p>245</p>
+            </div>
+
+            <div class="card">
+                <h3>Today's Entries</h3>
+                <p>12</p>
+            </div>
+
+            <div class="card">
+                <h3>Last Updated</h3>
+                <p style="font-size:20px;">10:45 AM</p>
+            </div>
+
+        </div>
+
+        <!-- Form -->
+
+        <div class="form-card">
+
+            <h2>Add New Lottery Result</h2>
+
+            <form>
+
+                <div class="form-row">
+
+                    <div>
+                        <label>Lottery Number</label>
+                        <input type="text"
+                            placeholder="Enter lottery number">
+                    </div>
+
+                    <div>
+                        <label>Lottery Name</label>
+                        <input type="text"
+                            placeholder="Enter lottery name">
+                    </div>
+
+                </div>
+
+                <button type="submit" class="save-btn">
+                    Save Result
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- Table -->
+
+        <div class="table-card">
+
+            <h2>Recent Results</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Lottery Number</th>
+                        <th>Lottery Name</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    <tr>
+                        <td>1</td>
+                        <td>67890</td>
+                        <td>Dear Lottery</td>
+                        <td>17 May 2026</td>
+                        <td>
+                            <button class="edit">
+                                <i class="fas fa-pen"></i>
+                            </button>
+
+                            <button class="delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>2</td>
+                        <td>24567</td>
+                        <td>Khanapara Lottery</td>
+                        <td>17 May 2026</td>
+                        <td>
+                            <button class="edit">
+                                <i class="fas fa-pen"></i>
+                            </button>
+
+                            <button class="delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </main>
+
+</body>
+</html>
+```

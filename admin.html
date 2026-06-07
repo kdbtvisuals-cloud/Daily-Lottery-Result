@@ -4,224 +4,113 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel: Daily Lottery Results</title>
-
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-
-        body {
-            background: #f5f5f5;
-        }
-
-        header {
-            background: #003da6;
-            color: white;
-            padding: 20px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-
-        header h1 {
-            font-size: 28px;
-        }
-
-        .logout-btn {
-            padding: 10px 20px;
-            border: none;
-            background: red;
-            color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            text-align: center;
-        }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            margin: 15px 0;
-            border: 2px solid #999;
-            border-radius: 5px;
-            font-size: 18px;
-        }
-
-        .submit-btn {
-            padding: 12px 40px;
-            font-size: 18px;
-            border: none;
-            background: #007bff;
-            color: white;
-            border-radius: 25px;
-            cursor: pointer;
-        }
-
-        .submit-btn:hover {
-            background: #0056b3;
-        }
-
-        @media(max-width:600px) {
-            header h1 {
-                font-size: 20px;
-            }
-
-            .logout-btn {
-                padding: 8px 15px;
-            }
-
-            input {
-                font-size: 16px;
-            }
-        }
-
-        a{
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="CSS/admin_style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="CSS/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
-
     <header>
         <div class="logo">
-            <h1>DAILY LOTTERY RESULTS</h1>
-            <p>Your Daily Luck Starts Here</p>
+            <h1>Admin Panel</h1>
+            <p>Daily Lottery Results</p>
         </div>
-        <div class="logout-btn" onclick="logout()">Log Out</div>
+        <div class="top-actions">
+            <button class="top-btn open-btn" onclick="navPublic()">
+                Open Public Page
+            </button>
+            <button onclick="logout()" class="top-btn logout-btn">
+                LogOut
+            </button>
+        </div>
     </header>
 
-    <div class="container">
-        <form id="lotteryForm">
-            <input type="text" id="name" placeholder="Enter Name">
-            <span id="errormsg_name"></span>
-            <input type="text" id="lottery_name" placeholder="Enter Lottery Name">
-            <span id="errormsg_lottry_name"></span>
-            <div onclick="submit()" class="submit-btn">Submit</div>
-        </form>
+    <div class="main-content">
+        <div class="sidebar">
+            <div class="menu">
+                <a href="#" class="active">
+                    <i class="fas fa-home"></i>
+                    Dashboard
+                </a>
+                <a href="#">
+                    <i class="fas fa-plus-circle"></i>
+                    Add Result
+                </a>
+                <a href="#">
+                    <i class="fas fa-list"></i>
+                    All Results
+                </a>
+                <a href="#">
+                    <i class="fas fa-gear">
+
+                    </i>
+                    Settings
+                </a>
+            </div>
+            <div class="quick-actions">
+                <h3>Quick Actions</h3>
+                <button class="action-btn refresh-btn" onclick="getdata()">
+                    Refresh Data
+                </button>
+                <button class="action-btn public-btn" onclick="navPublic()">
+                    Open Public Page
+                </button>
+            </div>
+        </div>
+
+        <div class="main">
+            <h1>Dashboard</h1>
+            <div class="stats">
+                <div class="card">
+                    <h3>Total Results</h3>
+                    <p id="totalResult"></p>
+                </div>
+                <div class="card">
+                    <h3>Today's Result</h3>
+                    <p id="todayResult"></p>
+                </div>
+                <div class="card">
+                    <h3>Last Updated</h3>
+                    <p id="lastUpdate"></p>
+                </div>
+            </div>
+            <div class="form-card">
+                <h2>Add New Lottery Result</h2>
+                <form id="addResult">
+                    <div class="form-row">
+                        <div>
+                            <label>Lottery Name</label>
+                            <input id="name" type="text" placeholder="Enter Lottery Name">
+                            <span id="errormsg_name"></span>
+                        </div>
+                        <div>
+                            <label>Lottery Number</label>
+                            <input id="lottery_name" type="text" placeholder="Enter Lottery Number">
+                            <span id="errormsg_lottry_name"></span>
+                        </div>
+                    </div>
+                    <button class="save-btn" type="submit">Save Result</button>
+                </form>
+            </div>
+            <div class="table-section">
+                <div class="table-header">PREVIOUS RESULTS</div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Lottery Name</th>
+                            <th>Winning Number</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resultsTable"></tbody>
+                </table>
+            </div>
+        </div>
     </div>
-    <a href="index.html">Navigate to Main Page</a>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.14.0/firebase-analytics.js";
-        import {
-            getFirestore,
-            collection,
-            addDoc
-        }
-            from "https://www.gstatic.com/firebasejs/12.14.0/firebase-firestore.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-            apiKey: "AIzaSyA5Z8Q2Gd5HnJ8bw0VLD1pXLj9p0Y19IYA",
-            authDomain: "daily-lottery-results-e654b.firebaseapp.com",
-            projectId: "daily-lottery-results-e654b",
-            storageBucket: "daily-lottery-results-e654b.firebasestorage.app",
-            messagingSenderId: "590578491665",
-            appId: "1:590578491665:web:fff837004eb1fd92ca6cb0",
-            measurementId: "G-X6SQC2YL3G"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-
-        const db = getFirestore(app);
-
-        window.db = db;
-        window.collection = collection;
-        window.addDoc = addDoc;
-
-        function _onload() {
-            let isLogIn = localStorage.getItem("islogIn");
-            console.log("Credentials: " + isLogIn)
-            if (isLogIn == "false") {
-                window.location.href = 'login.html';
-            }
-        }
-
-        window.onload = function () {
-            _onload()
-            console.log("Run Afrer Refresh")
-
-        };
-
-        function logout() {
-            isLogIn = false;
-            localStorage.setItem("islogIn", isLogIn)
-            window.location.href = 'login.html'
-        }
-
-        window.submit = async function submit() {
-            const name = document.getElementById("name");
-            const lottery_name = document.getElementById("lottery_name")
-
-            const errormsg_name = document.getElementById("errormsg_name");
-            const errormsg_lottery_name = document.getElementById("errormsg_lottry_name");
-
-            let isvalid = true;
-
-            errormsg_name.innerText = "";
-            errormsg_lottery_name.innerText = "";
-
-
-            if (name.value.length === 0) {
-                errormsg_name.innerText = "Please Enter the Name";
-                isvalid = false;
-            }
-
-            if (lottery_name.value.length === 0) {
-                errormsg_lottery_name.innerText = "Please Enter the lottery_name";
-                isvalid = false;
-            }
-
-            if (isvalid) {
-                const data = {
-                    "name": name.value,
-                    "number": lottery_name.value,
-                    "date": new Date().toISOString()
-                }
-
-                try {
-                    await addDoc(
-                        collection(db, "lotteryResults"),
-                        data
-                    );
-                    console.log("data Saved in firstore")
-                } catch (error) {
-                    console.log(error);
-                }
-
-                // let allData = JSON.parse(localStorage.getItem("data")) || [];
-
-                // allData.push(data);
-
-                // localStorage.setItem("data", JSON.stringify(allData))
-                // console.log("Saved: "+localStorage.getItem("data"))
-                alert("Saved successfully"+localStorage.getItem("data"))
-
-
-
-                name.value = "";
-                lottery_name.value = "";
-            }
-        }
-
-
-
+    <script type="module" src="JS/index.js">
     </script>
 
 </body>
